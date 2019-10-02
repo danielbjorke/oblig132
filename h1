@@ -22,41 +22,22 @@ rentesats = 0.01
 endringer = []
 
 def innskudd(sum):
-    global saldo, rentesats, endringer
+    global saldo,endringer
 
     saldo += sum
-    rentesats = 0.02
     endringer.append("+ " + str(sum))
     return saldo
 
-def uttak(x):
-    global saldo, rentesats, endringer
-
-    if saldo > 1000000:
-        saldo = saldo - x
-        if saldo <= 1000000:
-            print("Du har nå ordinær rente.")
-            rentesats = 0.01
-            endringer.append("- " + str(x))
-            return(saldo)
-        elif saldo > 0:
-            print("Overtrekk ikke mulig.")
-            saldo = (saldo + x)
-            return saldo
-        else:
-            rentesats = 0.02
-            endringer.append("- " + str(x))
-            return saldo
+def uttak(sum):
+    global saldo, endringer
+    global saldo, endringer
+    
+    if (saldo - sum) < 0:
+        print("Overtrekk ikke mulig")
+        return saldo
     else:
-        saldo -= x
-        if saldo < 0:
-            print("Overtrekk ikke mulig.")
-            saldo += x
-            return saldo
-        else:
-            rentesats = 0.01
-            endringer.append("- " + str(x))
-            return saldo
+        endringer.append("- " + str(sum))
+        return saldo
 
 def beregnRente():
     global saldo
@@ -67,7 +48,9 @@ def beregnRente():
 
 def renteoppgjør():
     global saldo
-    return(saldo + beregnRente())
+    saldo += beregnRente()
+    endringer.append("+ " + str(beregnRente()))
+    return saldo
 
 def velg():
     global saldo
