@@ -6,7 +6,7 @@ def pi(d = 2):
         return math.pi
     else:
         return(round(math.pi, d))
-    
+
 #Oppgave 2
 def temperaturKonvertering(temp, skala="C"):
     if skala.lower() == "c":
@@ -18,6 +18,7 @@ def temperaturKonvertering(temp, skala="C"):
 
 #Oppgave 3
 saldo = 500
+rentesats = 0.01
 endringer = []
 
 def innskudd(sum):
@@ -35,17 +36,19 @@ def uttak(sum):
         return saldo
     else:
         endringer.append("- " + str(sum))
+        saldo -= sum
         return saldo
 
 def beregnRente():
-    global saldo
+    global saldo, rentesats
     if saldo <= 1000000:
-        return(saldo * 0.01)
+        return(saldo * rentesats)
     else:
-        return(saldo * 0.02)
+        rentesats = 0.02
+        return(saldo * rentesats)
 
 def renteoppgjør():
-    global saldo
+    global saldo, rentesats
     saldo += beregnRente()
     endringer.append("+ " + str(beregnRente()))
     return saldo
