@@ -21,24 +21,13 @@ saldo = 500
 rentesats = 0.01
 endringer = []
 
-def innskudd(x):
+def innskudd(sum):
     global saldo, rentesats, endringer
 
-    if saldo > 1000000:
-        saldo += x
-        rentesats = 0.02
-        endringer.append("+ " + str(x))
-        return saldo
-    else:
-        saldo += x
-        endringer.append("+ " + str(x))
-        if saldo > 1000000:
-            print("Du har nå høyrente. ")
-            rentesats = 0.02
-            return saldo
-        else:
-            rentesats = 0.01
-            return saldo
+    saldo += sum
+    rentesats = 0.02
+    endringer.append("+ " + str(sum))
+    return saldo
 
 def uttak(x):
     global saldo, rentesats, endringer
