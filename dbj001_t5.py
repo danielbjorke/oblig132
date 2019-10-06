@@ -12,19 +12,14 @@ brannansvarlig: Kari
 """
 
 def verv(navn):
-
+    forening = list(velforening.split())
     alleverv = []
-    antall = 1
 
-    while antall <= velforening.count(navn):
+    for plassering, word in enumerate(forening):
+        if word == navn.capitalize():
+            alleverv.append(forening[plassering - 1].replace(":", "").capitalize())
 
-        stopp = (velforening.find(navn) - 2)
-        lenVerv = velforening[stopp:0:-1].find("\n")
-        start = stopp - lenVerv
-        ansvar = (velforening[(start + 1):stopp])
-        alleverv.append(ansvar)
-        antall += 1
+    return(alleverv)
 
-    print(alleverv)
 
-verv("Liv")
+print(verv("kari"))
