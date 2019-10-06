@@ -1,4 +1,11 @@
 #Oppgave1
+def antallVokaler(tekst):
+    vokaler = ["a", "e", "i", "o", "u", "y", "æ", "ø", "å"]
+    antall = 0
+    for bokstav in tekst.lower():
+        if bokstav in vokaler:
+            antall += 1
+    return antall
 
 #Oppgave2
 velforening = """Tulleveien Velforening
