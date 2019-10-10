@@ -1,21 +1,19 @@
 #oppgave1
-def leggtil():
-
-    nummer = open("telefon.txt", "a")
+def leggtil(): #Kunne hatt argumenter som antall å legge til for eksempel.
 
     antall = int(input("Hvor mange navn og nummer skal du legge til?\n"))
     print("Legg til navn og nummer, avlsutt med <enter>")
 
     while antall > 0:
         navnnummer = str(input("Navn og nummer:\n"))
-        nummer.write("\n" + navnnummer)
+        with open("telefon.txt", "a", encoding="utf-8") as nummer:
+            nummer.write("\n" + navnnummer)
         antall -= 1
-
-    nummer.close()
+    print("Navn og nummer lagt til.  ")
 
 #oppgave2
-def endreTlf():
-    with open("telefon.txt") as telefon:
+def endreTlf(): #Kunne hatt navn som argument feks, men holder den tom for oppgavens del.
+    with open("telefon.txt", encoding="utf-8") as telefon:
         innhold = telefon.read()
 
     navn = input("Navn:\n")
@@ -25,10 +23,10 @@ def endreTlf():
             gammeltnummer = (innhold.split()[plassering+1])
             print("Gammelt telefonnummer:", gammeltnummer)
             nyttnummer = input("Nytt telefonnummer:\n")
-            nyttinnhold = innhold.replace(gammeltnummer, nyttnummer)
+            innhold = innhold.replace(gammeltnummer, nyttnummer)
 
-            with open("telefon.txt", "w") as telefon:
-                telefon.write(nyttinnhold)
+            with open("telefon.txt", "w", encoding="utf-8") as telefon:
+                telefon.write(innhold)
 
 #oppgave3
 def fjernVokaler(fil):
@@ -45,9 +43,5 @@ def fjernVokaler(fil):
             tresmå.write(innhold)
     except:
         print("Fant ingen fil.")
-
-
-
-
 
 
