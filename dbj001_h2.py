@@ -10,11 +10,7 @@ with open("emner.txt", "r+") as dokument:
     for line in dokument:
         emner.append(line.strip("\n"))
 
-
-print(sorted(emner))
-print(karakterer)
-
-fagområde = {"Informasjonsvitenskap": "INF", "Økonomi": "ECON", "Filosofi": "EXP", }
+fagområde = {"Informasjonsvitenskap": "INFO", "Økonomi": "ECON", "Filosofi": "EXP","Organisasjonsvitenskap": "AORG", "Matematikk": "MAT"}
 
 
 def emneliste():
@@ -26,25 +22,26 @@ def emneliste():
 
     # kun et fagområde
     def velgområde(område):
-        for emne in emner:
+        for emne in sorted(emner):
             if fagområde[område] in emne.upper():
                 print(emne, karakterer.get(emne, ""))
 
     # kun et niva
     def emnenivå(tall):
-        for emne in emner:
+        for emne in sorted(emner):
             if int(emne[-3]) == int(tall):
                 print(emne, karakterer.get(emne, ""))
 
     # begge deler
     def beggedeler(område, tall):
-        for emne in emner:
+        for emne in sorted(emner):
             if int(emne[-3]) == int(tall) and fagområde[str(område)] in emne.upper():
                 print(emne, karakterer.get(emne, ""))
-
+        if 0 > tall or tall > 3:
+            print("Ikke gyldige emner.")
     #Ingen kritierer
     def ingen():
-        for emne in emner:
+        for emne in sorted(emner):
             print(emne, karakterer.get(emne, ""))
 
 
@@ -68,9 +65,14 @@ def lovligemnekode(kode):
     hjelp = """Ikke gyldig emnekode.
  - Koden skal starte med tre eller fire bokstaver.
  - Koden skal avsluttes med tre siffer, hvor det første skal være mellom 1 og 3 etter nivå.
+ - Koden må finnes under et fagfelt.
     """
+    lovlig = []
+    for bokstav in kode:
+        if bokstav.isalpha():
+            lovlig.append(bokstav)
     try:
-        if (0 < int(kode[-3]) < 4) and (5 < len(kode) < 8) and (kode[:3].isalpha() and (int(kode[-3:].isalnum()))):
+        if ("".join(lovlig) in list(fagområde.values())) and (0 < int(kode[-3]) < 4) and (5 < len(kode) < 8) and (kode[:3].isalpha() and (int(kode[-3:].isalnum()))):
             return True
         else:
             print(hjelp)
@@ -82,9 +84,12 @@ def lovligemnekode(kode):
 def leggtil():
     global emner
     nyttemne = str(input("Nytt emne:\n"))
-    if lovligemnekode(nyttemne):
-        emner.append(nyttemne)
-        print(nyttemne, "lagt til.")
+    if nyttemne.upper() in emner:
+        print("Emne eksisterer allerede")
+    elif lovligemnekode(nyttemne.upper()):
+        emner.append(nyttemne.upper())
+        print(nyttemne.upper(), "lagt til.")
+
 
 
 def endrekarakter():
@@ -93,7 +98,7 @@ def endrekarakter():
     if emne.upper() in emner:
         nykarakter = input("Karakter A-F (<enter> for å slette):\n")
         if (0 < len(nykarakter) < 2) and (nykarakter.upper() in "ABCDEF"):
-            karakterer[emne] = nykarakter.upper()
+            karakterer[emne.upper()] = nykarakter.upper()
         else:
             print("Ikke gyldig karakter. A-F(<enter> for å slette)")
     else:
@@ -130,25 +135,25 @@ def snitt():
 
             snittkalkulator(poeng)
 
-        elif nivå == "" and område in fagområde:
+        elif nivå == "" and område.capitalize() in fagområde:
             for emne in emner:
-                if fagområde[område] in emne:
+                if fagområde[område.capitalize()] in emne:
                     for key, value in karakterer.items():
                         if emne == key:
                             poeng.append(total[value])
 
             snittkalkulator(poeng)
 
-        elif (0 < int(nivå) < 4) and område in fagområde:
+        elif (0 < int(nivå) < 4) and område.capitalize() in fagområde:
             for emne in emner:
-                if fagområde[område] in emne:
+                if fagområde[område.capitalize()] in emne:
                     for key, value in karakterer.items():
                         if (key[-3]) == str(nivå) and key == emne:
                             poeng.append(total[value])
             try:
                 snittkalkulator(poeng)
             except:
-                print("teetstetets")
+                print("Ingen karakterer funnet som matchet søk.")
         else:
             print("Ingen karakterer funnet som matchet søk. ")
     except:
@@ -194,3 +199,4 @@ def valg():
             else: print("Kun tall mellom 1-5 gyldig.")
         except: print("Kun tall mellom 1-5 gyldig.")
 
+valg()
