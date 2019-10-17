@@ -2,7 +2,7 @@ karakterer = {"INFO100": "B", "INFO104": "A", "INFO110": "B", "INFO125": "C", "I
 
 emner = ["INFO100", "INFO104", "INFO110", "INFO125", "INFO280", "ECON100", "ECON200", "DIKULT105", "DIKULT106", "EXP100", "EXP200"]
 
-fagområde = {"Informasjonsvitenskap": "INF", "Økonomi": "ECON", "Filosofi": "EXP"}
+fagområde = {"Informasjonsvitenskap": "INF", "Økonomi": "ECON", "Filosofi": "EXP", }
 
 
 def emneliste():
@@ -144,12 +144,14 @@ def snitt():
 
 
 def valg():
+    global emner, karakterer, fagområde
     info = ("""--------------------
 1 Emneliste
 2 Legg til emne
 3 Sett karakter
 4 Karaktersnitt
 5 Avslutt
+6 Lagre
 --------------------""")
     print(info)
     while True:
@@ -160,8 +162,20 @@ def valg():
             elif handling == 3: endrekarakter()
             elif handling == 4: snitt()
             elif handling == 5:
-                print("Avsluttet.")
+                print("Takk for nå.")
                 break
+
+            elif handling == 6:
+                svar = input("Vil du lagre? (Ja/Nei)")
+                if svar.capitalize() == "Ja":
+                    with open("karakterer.txt", "w") as dokument:
+                        for key, value in karakterer.items():
+                            dokument.write(key + " " + value + "\n")
+                    with open("emner.txt", "w") as dokument:
+                        for item in emner:
+                            dokument.write(item + "\n")
+                    break
+
             elif handling == 0: print(info)
             else: print("Kun tall mellom 1-5 gyldig.")
         except: print("Kun tall mellom 1-5 gyldig.")
