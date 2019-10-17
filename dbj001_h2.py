@@ -30,11 +30,11 @@ def emneliste():
             if int(emne[-3]) == int(tall) and fagområde[str(område)] in emne.upper():
                 print(emne, karakterer.get(emne, ""))
 
-
     #Ingen kritierer
     def ingen():
         for emne in emner:
             print(emne, karakterer.get(emne, ""))
+
 
     if område == "" and nivå == "":
         ingen()
@@ -46,8 +46,10 @@ def emneliste():
         emnenivå(nivå)
 
     else:
-        try: beggedeler(område.capitalize(), int(nivå))
-        except: print("Fant ingen fag.")
+        try:
+            beggedeler(område.capitalize(), int(nivå))
+        except:
+            print("Fant ingen fag.")
 
 
 def lovligemnekode(kode):
@@ -86,24 +88,59 @@ def endrekarakter():
         print("Fant ikke emne. Om du ønsker legge til emne <tast 2>")
 
 
-def snittkalkulator(fagområde, nivå):
-    global karakterer, emner
+def snitt():
+    global emner, karakterer, fagområde
+    print("Velg fag og/eller emnenivå (<enter> for alle)")
+
     total = {"A": 6, "B": 5, "C": 4, "D": 3, "E": 2, "F": 1}
     poeng = []
-    for emne in liste:
-        if ((karakterer.get(emne, "Ingen"))) != "Ingen":
-            tall = ((karakterer.get(emne, "Ingen")))
-            poeng.append(total[tall])
 
-    avg = (sum(poeng)) / len(poeng)
-    for key, value in total.items():
-        if value == round(avg):
-            return (key)
+    def snittkalkulator(liste):
+        avg = (sum(poeng)) / len(poeng)
+        for key, value in total.items():
+            if value == round(avg):
+                print("Snitt:", key)
 
+    område = input(" - Fag: ")
+    nivå = input(" - Nivå (1-3): ")
 
-def snitt():
+    try:
+        if område == "" and nivå == "":
+            for key, value in karakterer.items():
+                poeng.append(total[value])
 
+            snittkalkulator(poeng)
 
+        elif område == "" and (0 < int(nivå) < 4):
+            for key, value in karakterer.items():
+                if (key[-3]) == nivå:
+                    poeng.append(total[value])
+
+            snittkalkulator(poeng)
+
+        elif nivå == "" and område in fagområde:
+            for emne in emner:
+                if fagområde[område] in emne:
+                    for key, value in karakterer.items():
+                        if emne == key:
+                            poeng.append(total[value])
+
+            snittkalkulator(poeng)
+
+        elif (0 < int(nivå) < 4) and område in fagområde:
+            for emne in emner:
+                if fagområde[område] in emne:
+                    for key, value in karakterer.items():
+                        if (key[-3]) == str(nivå) and key == emne:
+                            poeng.append(total[value])
+            try:
+                snittkalkulator(poeng)
+            except:
+                print("teetstetets")
+        else:
+            print("Ingen karakterer funnet som matchet søk. ")
+    except:
+        print("Ingen karakter funnet som matchet søk. ")
 
 
 def valg():
@@ -121,8 +158,7 @@ def valg():
             if handling == 1: emneliste()
             elif handling == 2: leggtil()
             elif handling == 3: endrekarakter()
-            elif handling == 4:
-                pass
+            elif handling == 4: snitt()
             elif handling == 5:
                 print("Avsluttet.")
                 break
@@ -130,3 +166,4 @@ def valg():
             else: print("Kun tall mellom 1-5 gyldig.")
         except: print("Kun tall mellom 1-5 gyldig.")
 
+valg()
