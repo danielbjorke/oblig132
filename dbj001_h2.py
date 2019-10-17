@@ -1,6 +1,18 @@
-karakterer = {"INFO100": "B", "INFO104": "A", "INFO110": "B", "INFO125": "C", "INFO280": "A", "ECON100": "A", "DIKULT105": "A"}
+karakterer = {}
+emner = []
 
-emner = ["INFO100", "INFO104", "INFO110", "INFO125", "INFO280", "ECON100", "ECON200", "DIKULT105", "DIKULT106", "EXP100", "EXP200"]
+with open("karakterer.txt", "r+") as dokument:
+    for line in dokument:
+        (key, value) = line.split()
+        karakterer[key] = value
+
+with open("emner.txt", "r+") as dokument:
+    for line in dokument:
+        emner.append(line.strip("\n"))
+
+
+print(sorted(emner))
+print(karakterer)
 
 fagområde = {"Informasjonsvitenskap": "INF", "Økonomi": "ECON", "Filosofi": "EXP", }
 
@@ -145,6 +157,7 @@ def snitt():
 
 def valg():
     global emner, karakterer, fagområde
+
     info = ("""--------------------
 1 Emneliste
 2 Legg til emne
@@ -174,10 +187,10 @@ def valg():
                     with open("emner.txt", "w") as dokument:
                         for item in emner:
                             dokument.write(item + "\n")
+                    print("Takk for nå.")
                     break
 
             elif handling == 0: print(info)
             else: print("Kun tall mellom 1-5 gyldig.")
         except: print("Kun tall mellom 1-5 gyldig.")
 
-valg()
