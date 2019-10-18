@@ -1,14 +1,6 @@
 karakterer = {}
 emner = []
 
-with open("karakterer.txt", "r+") as dokument:
-    for line in dokument:
-        (key, value) = line.split()
-        karakterer[key] = value
-
-with open("emner.txt", "r+") as dokument:
-    for line in dokument:
-        emner.append(line.strip("\n"))
 
 fagområde = {"Informasjonsvitenskap": "INFO", "Økonomi": "ECON", "Filosofi": "EXP","Organisasjonsvitenskap": "AORG", "Matematikk": "MAT"}
 
@@ -18,45 +10,30 @@ def emneliste():
     print("Velg fag og/eller emnenivå (<enter> for alle)")
 
     område = input(" - Fag: ")
-    nivå = input(" - Nivå (1-3): ")
+    nivå = input(" - Nivå (100, 200, 300): ")
 
-    # kun et fagområde
-    def velgområde(område):
-        for emne in sorted(emner):
-            if fagområde[område] in emne.upper():
-                print(emne, karakterer.get(emne, ""))
-
-    # kun et niva
-    def emnenivå(tall):
-        for emne in sorted(emner):
-            if int(emne[-3]) == int(tall):
-                print(emne, karakterer.get(emne, ""))
-
-    # begge deler
-    def beggedeler(område, tall):
-        for emne in sorted(emner):
-            if int(emne[-3]) == int(tall) and fagområde[str(område)] in emne.upper():
-                print(emne, karakterer.get(emne, ""))
-        if 0 > tall or tall > 3:
-            print("Ikke gyldige emner.")
-    #Ingen kritierer
-    def ingen():
+    #Ingen kriterier
+    if område == "" and nivå == "":
         for emne in sorted(emner):
             print(emne, karakterer.get(emne, ""))
-
-
-    if område == "" and nivå == "":
-        ingen()
-
+    #Kun fagområder
     elif område.capitalize() in fagområde and nivå == "":
-        velgområde(område.capitalize())
-
-    elif område == "" and (int(nivå) < 4 and int(nivå) > 0):
-        emnenivå(nivå)
-
+        for emne in sorted(emner):
+            if fagområde[område.capitalize()] in emne.upper():
+                print(emne, karakterer.get(emne, ""))
+    #Kun nivå
+    elif område == "" and (4 > int(nivå[0]) > 0) and len(nivå) == 3:
+        for emne in sorted(emner):
+            if int(emne[-3]) == int(nivå[0]):
+                print(emne, karakterer.get(emne, ""))
+    #Nivå og fagområde
     else:
         try:
-            beggedeler(område.capitalize(), int(nivå))
+            for emne in sorted(emner):
+                if int(emne[-3]) == int(nivå[0]) and len(nivå) == 3 and fagområde[str(område.capitalize())] in emne.upper():
+                    print(emne, karakterer.get(emne, ""))
+            if 0 > nivå[0] or nivå[0] > 3:
+                print("Ikke gyldige emner.")
         except:
             print("Fant ingen fag.")
 
@@ -82,7 +59,7 @@ def lovligemnekode(kode):
 
 
 def leggtil():
-    global emner
+    global emner, fagområde
     nyttemne = str(input("Nytt emne:\n"))
     if nyttemne.upper() in emner:
         print("Emne eksisterer allerede")
@@ -91,9 +68,8 @@ def leggtil():
         print(nyttemne.upper(), "lagt til.")
 
 
-
 def endrekarakter():
-    global emner, karakterer
+    global emner, karakterer, fagområde
     emne = input("Emne:\n")
     if emne.upper() in emner:
         nykarakter = input("Karakter A-F (<enter> for å slette):\n")
@@ -119,22 +95,23 @@ def snitt():
                 print("Snitt:", key)
 
     område = input(" - Fag: ")
-    nivå = input(" - Nivå (1-3): ")
+    nivå = input(" - Nivå (100, 200, 300): ")
 
     try:
+        #Ingen krav
         if område == "" and nivå == "":
             for key, value in karakterer.items():
                 poeng.append(total[value])
 
             snittkalkulator(poeng)
-
-        elif område == "" and (0 < int(nivå) < 4):
+        #Kun nivå
+        elif område == "" and (0 < int(nivå[0]) < 4) and len(nivå) == 3:
             for key, value in karakterer.items():
-                if (key[-3]) == nivå:
+                if (key[-3]) == nivå[0]:
                     poeng.append(total[value])
 
             snittkalkulator(poeng)
-
+        #Kun fagområde
         elif nivå == "" and område.capitalize() in fagområde:
             for emne in emner:
                 if fagområde[område.capitalize()] in emne:
@@ -144,11 +121,12 @@ def snitt():
 
             snittkalkulator(poeng)
 
-        elif (0 < int(nivå) < 4) and område.capitalize() in fagområde:
+        #Begge deler
+        elif (0 < int(nivå[0]) < 4) and len(nivå) == 3 and område.capitalize() in fagområde:
             for emne in emner:
                 if fagområde[område.capitalize()] in emne:
                     for key, value in karakterer.items():
-                        if (key[-3]) == str(nivå) and key == emne:
+                        if (key[-3]) == str(nivå[0]) and key == emne:
                             poeng.append(total[value])
             try:
                 snittkalkulator(poeng)
@@ -162,6 +140,15 @@ def snitt():
 
 def valg():
     global emner, karakterer, fagområde
+
+    with open("karakterer.txt", encoding="utf-8") as dokument:
+        for line in dokument:
+            (key, value) = line.split()
+            karakterer[key] = value
+
+    with open("emner.txt", encoding="utf-8") as dokument:
+        for line in dokument:
+            emner.append(line.strip("\n"))
 
     info = ("""--------------------
 1 Emneliste
