@@ -196,7 +196,7 @@ def valg():
                     break
 
             elif handling == 0: print(info)
-            else: print("Kun tall mellom 1-5 gyldig.")
-        except: print("Kun tall mellom 1-5 gyldig.")
+            else: print("Kun tall mellom 1-6 gyldig.")
+        except: print("Kun tall mellom 1-6 gyldig.")
 
 valg()
