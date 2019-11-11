@@ -8,17 +8,22 @@ bunken = {"A": 4, "B": 4, "C": 4, "D": 4, "E": 4, "F": 4, "G": 4, "H": 4}
 
 #Lager bordet med kort
 def spill():
+
     def visbrett():
-        navn = ("      ".join(list(bunken.keys())))
-        print("\t", navn)
-        print("   ", "     ".join(kortibruk))
-        antall = list(map(str, list(bunken.values())))
-        print("\t", "      ".join(antall))
+        if sum(list(bunken.values())) == 0:
+            print("Gratulerer du har vunnet spillet.")
+        else:
+            navn = ("      ".join(list(bunken.keys())))
+            print("\t", navn)
+            print("   ", "     ".join(kortibruk))
+            antall = list(map(str, list(bunken.values())))
+            print("\t", "      ".join(antall))
 
-    #Gyldigtrekk, 2 forskjellige bunker som ikke er tomme
+    #Gyldigtrekk, 2 forskjellige bunker som ikke er tomme, og kort med samme verdi
     def gyldigvalg(liste):
+        kortposisjon = []
         if len(liste) == 2 and liste[0].upper() != liste[1].upper() and liste[0].upper() in list(bunken.keys())and liste[1].upper() in list(bunken.keys()):
-
+            kortposisjon.append()
             for bokstav in liste:
                 if bunken[bokstav.upper()] > 0:
                     return True
@@ -41,7 +46,8 @@ def spill():
                     else:
                         bunken[bokstav.upper()] = 0
                         kortibruk[index] = "  "
-        else:print("Ikke gyldig input.")
+        else:
+            print("Ikke gyldig input.")
         visbrett()
 
 
@@ -73,6 +79,3 @@ def start():
         elif valg == 3:pass
         elif valg == 4: break
         elif valg == 0: print(hjelp)
-
-
-
