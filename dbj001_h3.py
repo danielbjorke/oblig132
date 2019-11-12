@@ -6,38 +6,61 @@ ubruktekort = ["\u2660A", "\u2660K", "\u2660Q", "\u2660J", "\u266010", "\u26609"
 kortibruk = []
 bunken = {"A": 4, "B": 4, "C": 4, "D": 4, "E": 4, "F": 4, "G": 4, "H": 4}
 
+def lagre():
+    with open("lagret.txt", "w", encoding="utf-8") as innhold:
+        innhold.write("Bunken:\n")
+        for nøkkel, verdi in bunken.items():
+            innhold.write(nøkkel + " " + str(verdi) + "\n")
+        innhold.write("Kortibruk:\n")
+        for kort in kortibruk:
+            innhold.write(kort + "\n")
+        innhold.write("Ubruktekort:\n")
+        for kort in ubruktekort:
+            innhold.write(kort + "\n")
+def hentspill(liste1, liste2, dict):
+    bunken = {}
+    kortibruk = []
+    with open("lagret.txt", encoding="utf-8") as innhold:
+        while len(list(bunken)) < 9:
+            for linje in innhold:
+                (key, value) = linje.split()
+                bunken[key] = value
+
+
+
 #Lager bordet med kort
-def spill():
+def nyttspill():
+    print("Trekk to kort - X for å avbryte")
 
     #Forteller om spillet er vunnet eller tapt. Om ikke viser det bare brettet.
     def visbrett():
-        kort = set()
+        while True:
+            kort = set()
 
-        for objekt in kortibruk:
-            kort.add(objekt[-1])
+            for objekt in kortibruk:
+                kort.add(objekt[-1])
 
-        if sum(list(bunken.values())) == 0:
-            print("Gratulerer du har vunnet spillet.")
+            if sum(list(bunken.values())) == 0:
+                print("Gratulerer du har vunnet spillet.")
+                break
+
+            elif len(kort) == len(set(kortibruk)):
+                navn = ("      ".join(list(bunken.keys())))
+                print("\t", navn)
+                print("   ", "     ".join(kortibruk))
+                antall = list(map(str, list(bunken.values())))
+                print("\t", "      ".join(antall))
+                print("Ingen mulige trekk.")
+                break
 
 
-
-        elif len(kort) == len(set(kortibruk)):
-            navn = ("      ".join(list(bunken.keys())))
-            print("\t", navn)
-            print("   ", "     ".join(kortibruk))
-            antall = list(map(str, list(bunken.values())))
-            print("\t", "      ".join(antall))
-            print("Ingen mulige trekk.")
-
-
-
-        else:
-            navn = ("      ".join(list(bunken.keys())))
-            print("\t", navn)
-            print("   ", "     ".join(kortibruk))
-            antall = list(map(str, list(bunken.values())))
-            print("\t", "      ".join(antall))
-            endrekort()
+            else:
+                navn = ("      ".join(list(bunken.keys())))
+                print("\t", navn)
+                print("   ", "     ".join(kortibruk))
+                antall = list(map(str, list(bunken.values())))
+                print("\t", "      ".join(antall))
+                endrekort()
 
 
     #Gyldigtrekk, 2 forskjellige bunker som ikke er tomme, og kort med samme verdi
@@ -58,7 +81,13 @@ def spill():
     # endre en posisjon
     def endrekort():
         valgt = input("Velg bunker: ")
-        if gyldigvalg(valgt):
+        if valgt.upper() == "X":
+            xvalg = input("Spillet avbrutt. Tast 2 for å lagre, 0 for meny: ")
+            if int(xvalg) == 0:
+                pass
+            elif int(xvalg) == 2:
+                lagre()
+        elif gyldigvalg(valgt):
             for bokstav in valgt.upper():
                 if bokstav.upper() in list(bunken.keys()):
                     index = list(bunken.keys()).index(bokstav)
@@ -67,39 +96,29 @@ def spill():
                         kortibruk[index] = ubruktekort.pop(random.randint(0, len(ubruktekort) - 1))
                     else:
                         bunken[bokstav.upper()] = 0
-                        kortibruk[index] = " "
+                        kortibruk[index] = "  "
         else:
             print("Ikke gyldig input.")
-        visbrett()
 
-
-    print("Trekk to kort - X for å avbryte")
-    while len(kortibruk) < 8:
-        kort = ubruktekort.pop(random.randint(0,len(ubruktekort) - 1))
-        kortibruk.append(kort)
     visbrett()
 
 
-
-
-
-
-
-
-
-
 def start():
-    while True:
-        print("""1 - start nytt spill
+    info = ("""1 - start nytt spill
 2 - lagre spillet
 3 - hent lagret spill
 4 - avslutt""")
-
+    print(info)
+    while True:
         valg = int(input("Velg handling (0 for meny)\n"))
-        if valg == 1: spill()
+        if valg == 1:
+            while len(kortibruk) < 8:
+                kort = ubruktekort.pop(random.randint(0, len(ubruktekort) - 1))
+                kortibruk.append(kort)
+            nyttspill()
         elif valg == 2:pass
         elif valg == 3:pass
         elif valg == 4: break
-        elif valg == 0: continue
+        elif valg == 0: print(info)
 
 start()
