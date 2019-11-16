@@ -1,4 +1,5 @@
 import random
+import os.path
 
 info = ("""1 - start nytt spill
 2 - lagre spillet
@@ -123,7 +124,7 @@ def spill(loading):
         antall = list(map(str, list(bunken.values())))
         print("\t", "      ".join(antall))
 
-        valg = input("Velg bunker:")
+        valg = input("Velg bunker: ")
 
         if valg.upper() == "X":
             print("Spillet avbrutt. Tast 2 for å lagre, 0 for meny: ")
@@ -156,7 +157,11 @@ def valg():
             if valg == 1: spill(nybunke)
             elif valg == 2:
                 lagre()
-            elif valg == 3:spill(hentbunke)
+            elif valg == 3:
+                if os.path.isfile("bunken.txt"):
+                    spill(hentbunke)
+                else:
+                    print("Fant ingen spill å laste inn.")
             elif valg == 4:
                 print("Takk for nå.")
                 break
